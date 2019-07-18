@@ -82,24 +82,24 @@ public class RestHttpUtils {
     /**
      * 使用全局参数创建请求
      *
-     * @param cls Class
-     * @param <T> T
-     * @return 返回
+     * @param apiClass api
+     * @param <T>      T
+     * @return T
      */
-    public static <T> T createApi(Class<T> cls) {
-        return ApiFactory.getInstance().createApi(cls);
+    public static <T> T createApi(Class<T> apiClass) {
+        return ApiFactory.getInstance().createApi(apiClass);
     }
 
     /**
      * 切换baseUrl
      *
      * @param baseUrlValue 域名的url
-     * @param api          class
+     * @param apiClass     api
      * @param <T>          T
      * @return T
      */
-    public static <T> T createApi(String baseUrlValue, Class<T> api) {
-        return ApiFactory.getInstance().createApi(baseUrlValue, api);
+    public static <T> T createApi(String baseUrl, Class<T> apiClass) {
+        return ApiFactory.getInstance().createApi(baseUrl, apiClass);
     }
 
     /**
@@ -111,8 +111,8 @@ public class RestHttpUtils {
      * @param <T>          T
      * @return T
      */
-    public static <T> T createApi(String baseUrlKey, String baseUrlValue, Class<T> api) {
-        return ApiFactory.getInstance().createApi(baseUrlKey, baseUrlValue, api);
+    public static <T> T createApi(String baseUrlKey, String baseUrl, Class<T> api) {
+        return ApiFactory.getInstance().createApi(baseUrlKey, baseUrl, api);
     }
 
 
@@ -122,8 +122,8 @@ public class RestHttpUtils {
      * @param url 地址
      * @return ResponseBody
      */
-    public static Observable<ResponseBody> downloadFile(String url) {
-        return DownloadHelper.downloadFile(url);
+    public static Observable<ResponseBody> download(String fileUrl) {
+        return DownloadHelper.downloadFile(fileUrl);
     }
 
     /**
@@ -166,7 +166,7 @@ public class RestHttpUtils {
      * @param urlValue url
      * @return RxUrlManager
      */
-    public static void setUrl(String urlValue) {
+    public static void setBaseUrl(String urlValue) {
         RxUrlManager.getInstance().setUrl(urlValue);
     }
 
@@ -177,8 +177,19 @@ public class RestHttpUtils {
      * @param urlValue url
      * @return RxUrlManager
      */
-    public void setUrl(String urlKey, String urlValue) {
-        RxUrlManager.getInstance().setUrl(urlKey, urlValue);
+    public static RxUrlManager setBaseUrl(String urlKey, String urlValue) {
+        return RxUrlManager.getInstance().setUrl(urlKey, urlValue);
+    }
+
+    /**
+     * 动态修改baseUrl信息
+     *
+     * @param api      key
+     * @param urlValue url
+     * @return RxUrlManager
+     */
+    public static RxUrlManager setBaseUrl(Class<?> apiClass, String urlValue) {
+        return RxUrlManager.getInstance().setUrl(apiClass, urlValue);
     }
 
     /**

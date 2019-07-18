@@ -12,11 +12,11 @@ public class DownloadHelper {
     public static final String DEFAULT_DOWNLOAD_KEY = "defaultDownloadUrlKey";
     public static final String DEFAULT_DOWNLOAD_URL = "https://api.github.com/";
 
-    public static Observable<ResponseBody> downloadFile(String url) {
+    public static Observable<ResponseBody> downloadFile(String fileUrl) {
         return ApiFactory.getInstance()
                 .setOkClient(new OkHttpClient.Builder().addInterceptor(new DownloadInterceptor()).build())
                 .createApi(DEFAULT_DOWNLOAD_KEY, DEFAULT_DOWNLOAD_URL, DownloadApi.class)
-                .downloadFile(url)
+                .downloadFile(fileUrl)
                 .compose(RxSchedulers.apply());
     }
 

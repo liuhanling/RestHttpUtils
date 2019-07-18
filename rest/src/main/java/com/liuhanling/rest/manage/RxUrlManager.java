@@ -66,7 +66,7 @@ public class RxUrlManager {
     }
 
     /**
-     * 针对单个baseUrl切换的时候清空旧baseUrl的所有信息
+     * 针对多个baseUrl切换的时候清空旧baseUrl的所有信息
      *
      * @param urlValue url
      * @return RxUrlManager
@@ -74,6 +74,18 @@ public class RxUrlManager {
     public RxUrlManager setUrl(String urlKey, String urlValue) {
         urlMap.put(urlKey, urlValue);
         ApiFactory.getInstance().clearApi(urlKey);
+        return this;
+    }
+
+    /**
+     * 针对多个baseUrl切换的时候清空旧baseUrl的所有信息
+     *
+     * @param urlValue url
+     * @return RxUrlManager
+     */
+    public RxUrlManager setUrl(Class<?> apiClass, String urlValue) {
+        urlMap.put(apiClass.getSimpleName(), urlValue);
+        ApiFactory.getInstance().clearApi(apiClass.getSimpleName());
         return this;
     }
 

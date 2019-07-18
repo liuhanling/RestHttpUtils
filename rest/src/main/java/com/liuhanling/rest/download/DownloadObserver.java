@@ -8,9 +8,11 @@ import java.io.File;
 import java.io.IOException;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
@@ -43,23 +45,27 @@ public abstract class DownloadObserver extends BaseObserver<ResponseBody> {
                     @Override
                     public void onNext(ResponseBody responseBody) {
                         try {
-                            File file = DownloadManager.saveFile(responseBody, fileName, destFileDir, (bytesRead, contentLength, progress, done, filePath) -> Observable
+                            DownloadManager.saveFile(responseBody, fileName, destFileDir, (bytesRead, contentLength, progress, done, filePath) -> Observable
                                     .just(progress)
                                     .distinctUntilChanged()
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(integer -> onProgress(bytesRead, contentLength, progress)));
-                            DownloadObserver.this.onSuccess(file);
+                                    .subscribe(integer -> {
+                                        onProgress(bytesRead, contentLength, progress);
+                                        if (done) {
+                                            onSuccess(new File(filePath));
+                                        }
+                                    }));
                         } catch (IOException e) {
-                            Observable
-                                    .just(e.getMessage())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(s -> onError(e));
+                            onError(e);
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        DownloadObserver.this.onError(e);
+                        Observable
+                                .just(e.getMessage())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(s -> DownloadObserver.this.onError(e));
                     }
 
                     @Override
@@ -68,7 +74,6 @@ public abstract class DownloadObserver extends BaseObserver<ResponseBody> {
                     }
                 });
     }
-
 
     /**
      * 成功回调
