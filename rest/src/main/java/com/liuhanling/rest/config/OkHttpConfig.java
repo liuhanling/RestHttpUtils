@@ -5,12 +5,11 @@ import android.text.TextUtils;
 
 import com.liuhanling.rest.cookie.CookieJarImpl;
 import com.liuhanling.rest.cookie.store.CookieStore;
-import com.liuhanling.rest.utils.SSLUtils;
 import com.liuhanling.rest.interceptor.HeaderInterceptor;
+import com.liuhanling.rest.interceptor.LoggerInterceptor;
 import com.liuhanling.rest.interceptor.NetCacheInterceptor;
 import com.liuhanling.rest.interceptor.NoNetCacheInterceptor;
-import com.liuhanling.rest.interceptor.LoggerInterceptor;
-import com.liuhanling.rest.interfaces.HeadersListener;
+import com.liuhanling.rest.utils.SSLUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -79,17 +78,11 @@ public class OkHttpConfig {
         private String password;
         private InputStream[] certificates;
         private Interceptor[] interceptors;
-        private HeadersListener headersListener;
         private Map<String, String> headers;
         private HostnameVerifier hostnameVerifier;
 
         public Builder(Context context) {
             this.context = context;
-        }
-
-        public Builder setHeaders(HeadersListener headersListener) {
-            this.headersListener = headersListener;
-            return this;
         }
 
         public Builder setHeaders(Map<String, String> headers) {
@@ -211,14 +204,6 @@ public class OkHttpConfig {
          * 配置headers
          */
         private void setHeadersConfig() {
-            if (headersListener != null) {
-                okHttpClientBuilder.addInterceptor(new HeaderInterceptor() {
-                    @Override
-                    public Map<String, String> buildHeaders() {
-                        return headersListener.buildHeaders();
-                    }
-                });
-            }
             if (headers != null) {
                 okHttpClientBuilder.addInterceptor(new HeaderInterceptor() {
                     @Override

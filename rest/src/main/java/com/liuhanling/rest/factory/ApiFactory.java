@@ -14,9 +14,6 @@ public class ApiFactory {
 
     private volatile static ApiFactory instance;
 
-    /**
-     * 缓存ApiService
-     */
     private static HashMap<String, Object> apiServiceCache;
 
     private CallAdapter.Factory[] callAdapterFactory;
@@ -24,6 +21,8 @@ public class ApiFactory {
     private Converter.Factory[] converterFactory;
 
     private OkHttpClient okHttpClient;
+
+    private String baseUrl;
 
     public static ApiFactory getInstance() {
         if (instance == null) {
@@ -40,18 +39,12 @@ public class ApiFactory {
         apiServiceCache = new HashMap<>();
     }
 
-    /**
-     * 清空所有api缓存
-     */
-    public void clearAllApi() {
-        apiServiceCache.clear();
+    public void clearApi(String key) {
+        apiServiceCache.remove(key);
     }
 
-    /**
-     * 清空所有api缓存
-     */
-    public void clearApi(String baseUrlKey) {
-        apiServiceCache.remove(baseUrlKey);
+    public void clearAllApi() {
+        apiServiceCache.clear();
     }
 
     public ApiFactory setCallAdapterFactory(CallAdapter.Factory... callAdapterFactory) {
@@ -70,28 +63,34 @@ public class ApiFactory {
     }
 
     public ApiFactory setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
         RxUrlManager.getInstance().setUrl(baseUrl);
         return this;
     }
 
     public <E> E createApi(Class<E> apiClass) {
-        String urlKey = RxUrlManager.DEFAULT_URL_KEY;
-        String urlValue = RxUrlManager.getInstance().getUrl();
-        return createApi(urlKey, urlValue, apiClass);
+        String baseUrlKey = apiClass.getSimpleName();
+        String baseUrlVal = RxUrlManager.getInstance().getUrl(baseUrlKey);
+        return createApi(baseUrlKey, baseUrlVal, apiClass);
+    }
+
+    public <E> E createApi(String baseUrl, Class<E> apiClass) {
+        String baseKey = apiClass.getSimpleName();
+        return createApi(baseKey, baseUrl, apiClass);
     }
 
     @SuppressWarnings("unchecked")
-    public <E> E createApi(String baseUrlKey, String baseUrlValue, Class<E> apiClass) {
-        E api = (E) apiServiceCache.get(baseUrlKey);
+    public <E> E createApi(String baseKey, String baseUrl, Class<E> apiClass) {
+        E api = (E) apiServiceCache.get(baseKey);
         if (api == null) {
             Retrofit retrofit = new RetrofitBuilder()
-                    .setBaseUrl(baseUrlValue)
+                    .setBaseUrl(baseUrl)
                     .setCallAdapterFactory(callAdapterFactory)
                     .setConverterFactory(converterFactory)
                     .setOkHttpClient(okHttpClient)
                     .build();
             api = retrofit.create(apiClass);
-            apiServiceCache.put(baseUrlKey, api);
+            apiServiceCache.put(baseKey, api);
         }
         return api;
     }

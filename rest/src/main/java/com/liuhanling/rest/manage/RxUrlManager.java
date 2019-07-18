@@ -2,6 +2,7 @@ package com.liuhanling.rest.manage;
 
 import com.liuhanling.rest.RestHttpUtils;
 import com.liuhanling.rest.factory.ApiFactory;
+import com.liuhanling.rest.upload.UploadFileApi;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class RxUrlManager {
      * @param urlMap map
      * @return RxUrlManager
      */
-    public RxUrlManager setMultipleUrl(Map<String, String> urlMap) {
+    public RxUrlManager setUrl(Map<String, String> urlMap) {
         this.urlMap = urlMap;
         return this;
     }
@@ -53,12 +54,24 @@ public class RxUrlManager {
     }
 
     /**
+     * 向map中添加url
+     *
+     * @param urlKey   key
+     * @param apiClass api
+     * @return RxUrlManager
+     */
+    public RxUrlManager addUrl(String urlKey, Class<?> apiClass) {
+        urlMap.put(urlKey, apiClass.getSimpleName());
+        return this;
+    }
+
+    /**
      * 从map中删除某个url
      *
      * @param urlKey 需要删除的urlKey
      * @return RxUrlManager
      */
-    public RxUrlManager removeUrlByKey(String urlKey) {
+    public RxUrlManager removeUrl(String urlKey) {
         urlMap.remove(urlKey);
         return this;
     }
@@ -81,7 +94,7 @@ public class RxUrlManager {
      * @return url
      */
     public String getUrl() {
-        return getUrlByKey(DEFAULT_URL_KEY);
+        return getUrl(DEFAULT_URL_KEY);
     }
 
     /**
@@ -90,7 +103,7 @@ public class RxUrlManager {
      * @param urlKey 获取对应的url
      * @return url
      */
-    public String getUrlByKey(String urlKey) {
+    public String getUrl(String urlKey) {
         return urlMap.get(urlKey);
     }
 

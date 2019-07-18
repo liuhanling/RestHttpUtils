@@ -72,7 +72,16 @@ public class UploadHelper {
      * @return Observable
      */
     public static Observable<ResponseBody> uploadFiles(String url, String fileName, Map<String, Object> paramsMap, List<String> filePaths) {
+        return ApiFactory.getInstance()
+                .createApi(DEFAULT_UPLOAD_KEY, DEFAULT_UPLOAD_URL, UploadFileApi.class)
+                .uploadFiles(url, getParts(fileName, paramsMap, filePaths));
+    }
 
+    public static List<MultipartBody.Part> getParts(Map<String, Object> paramsMap, List<String> filePaths) {
+        return getParts(DEFAULT_FILE_NAME, paramsMap, filePaths);
+    }
+
+    public static List<MultipartBody.Part> getParts(String fileName, Map<String, Object> paramsMap, List<String> filePaths) {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         if (null != paramsMap) {
@@ -87,10 +96,6 @@ public class UploadHelper {
             builder.addFormDataPart(fileName, file.getName(), body);
         }
 
-        List<MultipartBody.Part> parts = builder.build().parts();
-
-        return ApiFactory.getInstance()
-                .createApi(DEFAULT_UPLOAD_KEY, DEFAULT_UPLOAD_URL, UploadFileApi.class)
-                .uploadFiles(url, parts);
+        return builder.build().parts();
     }
 }
