@@ -4,6 +4,7 @@ import com.liuhanling.rest.manage.RxUrlManager;
 import com.liuhanling.rest.retrofit.RetrofitBuilder;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import retrofit2.CallAdapter;
@@ -65,6 +66,11 @@ public class ApiFactory {
     public ApiFactory setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
         RxUrlManager.getInstance().setUrl(baseUrl);
+        return this;
+    }
+
+    public ApiFactory setBaseUrl(String urlKey, String urlValue) {
+        RxUrlManager.getInstance().addUrl(urlKey, urlValue);
         return this;
     }
 

@@ -36,7 +36,7 @@ public class RxUrlManager {
      * @param urlMap map
      * @return RxUrlManager
      */
-    public RxUrlManager setUrl(Map<String, String> urlMap) {
+    public RxUrlManager addUrl(Map<String, String> urlMap) {
         this.urlMap = urlMap;
         return this;
     }
@@ -54,30 +54,7 @@ public class RxUrlManager {
     }
 
     /**
-     * 向map中添加url
-     *
-     * @param urlKey   key
-     * @param apiClass api
-     * @return RxUrlManager
-     */
-    public RxUrlManager addUrl(String urlKey, Class<?> apiClass) {
-        urlMap.put(urlKey, apiClass.getSimpleName());
-        return this;
-    }
-
-    /**
-     * 从map中删除某个url
-     *
-     * @param urlKey 需要删除的urlKey
-     * @return RxUrlManager
-     */
-    public RxUrlManager removeUrl(String urlKey) {
-        urlMap.remove(urlKey);
-        return this;
-    }
-
-    /**
-     * 针对单个baseUrl切换的时候清空老baseUrl的所有信息
+     * 针对单个baseUrl切换的时候清空旧baseUrl的所有信息
      *
      * @param urlValue url
      * @return RxUrlManager
@@ -85,6 +62,18 @@ public class RxUrlManager {
     public RxUrlManager setUrl(String urlValue) {
         urlMap.put(DEFAULT_URL_KEY, urlValue);
         ApiFactory.getInstance().clearApi(DEFAULT_URL_KEY);
+        return this;
+    }
+
+    /**
+     * 针对单个baseUrl切换的时候清空旧baseUrl的所有信息
+     *
+     * @param urlValue url
+     * @return RxUrlManager
+     */
+    public RxUrlManager setUrl(String urlKey, String urlValue) {
+        urlMap.put(urlKey, urlValue);
+        ApiFactory.getInstance().clearApi(urlKey);
         return this;
     }
 
@@ -105,6 +94,18 @@ public class RxUrlManager {
      */
     public String getUrl(String urlKey) {
         return urlMap.get(urlKey);
+    }
+
+    /**
+     * 从map中删除某个url
+     *
+     * @param urlKey 需要删除的urlKey
+     * @return RxUrlManager
+     */
+    public RxUrlManager clear(String urlKey) {
+        urlMap.remove(urlKey);
+        ApiFactory.getInstance().clearApi(urlKey);
+        return this;
     }
 
     /**

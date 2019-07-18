@@ -9,6 +9,7 @@ import com.liuhanling.rest.cookie.store.CookieStore;
 import com.liuhanling.rest.download.DownloadHelper;
 import com.liuhanling.rest.factory.ApiFactory;
 import com.liuhanling.rest.manage.RxHttpManager;
+import com.liuhanling.rest.manage.RxUrlManager;
 import com.liuhanling.rest.upload.UploadHelper;
 
 import java.util.List;
@@ -92,14 +93,26 @@ public class RestHttpUtils {
     /**
      * 切换baseUrl
      *
+     * @param baseUrlValue 域名的url
+     * @param api          class
+     * @param <T>          T
+     * @return T
+     */
+    public static <T> T createApi(String baseUrlValue, Class<T> api) {
+        return ApiFactory.getInstance().createApi(baseUrlValue, api);
+    }
+
+    /**
+     * 切换baseUrl
+     *
      * @param baseUrlKey   域名的key
      * @param baseUrlValue 域名的url
-     * @param cls          class
-     * @param <K>          k
-     * @return k
+     * @param api          class
+     * @param <T>          T
+     * @return T
      */
-    public static <K> K createApi(String baseUrlKey, String baseUrlValue, Class<K> cls) {
-        return ApiFactory.getInstance().createApi(baseUrlKey, baseUrlValue, cls);
+    public static <T> T createApi(String baseUrlKey, String baseUrlValue, Class<T> api) {
+        return ApiFactory.getInstance().createApi(baseUrlKey, baseUrlValue, api);
     }
 
 
@@ -145,6 +158,27 @@ public class RestHttpUtils {
      */
     public static Observable<ResponseBody> uploadFiles(String url, Map<String, Object> paramsMap, List<String> filePaths) {
         return UploadHelper.uploadFiles(url, paramsMap, filePaths);
+    }
+
+    /**
+     * 动态修改baseUrl信息
+     *
+     * @param urlValue url
+     * @return RxUrlManager
+     */
+    public static void setUrl(String urlValue) {
+        RxUrlManager.getInstance().setUrl(urlValue);
+    }
+
+    /**
+     * 动态修改baseUrl信息
+     *
+     * @param urlKey   key
+     * @param urlValue url
+     * @return RxUrlManager
+     */
+    public void setUrl(String urlKey, String urlValue) {
+        RxUrlManager.getInstance().setUrl(urlKey, urlValue);
     }
 
     /**
