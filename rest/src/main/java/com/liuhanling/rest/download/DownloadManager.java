@@ -47,9 +47,11 @@ public class DownloadManager {
 
                 final long finalSum = sum;
 
-                progressListener.onResponseProgress(finalSum, contentLength, (int) ((finalSum * 1.0f / contentLength) * 100), finalSum == contentLength, file.getAbsolutePath());
+                progressListener.onDownloadProgress(finalSum, contentLength, (int) ((finalSum * 1.0f / contentLength) * 100));
             }
             fos.flush();
+
+            progressListener.onDownloadComplete(file);
 
             return file;
 

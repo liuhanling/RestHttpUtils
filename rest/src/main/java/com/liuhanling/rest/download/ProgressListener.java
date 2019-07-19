@@ -1,16 +1,23 @@
 package com.liuhanling.rest.download;
 
+import java.io.File;
+
 public interface ProgressListener {
 
     /**
-     * 载进度监听
+     * 下载进度监听
      *
-     * @param bytesRead     已经下载文件的大小
-     * @param contentLength 文件的大小
-     * @param progress      当前进度
-     * @param done          是否下载完成
-     * @param filePath      文件路径
+     * @param bytes     已经下载文件的大小
+     * @param total     文件的大小
+     * @param progress  当前进度
      */
-    void onResponseProgress(long bytesRead, long contentLength, int progress, boolean done, String filePath);
+    void onDownloadProgress(long bytes, long total, int progress);
+
+    /**
+     * 下载完成
+     *
+     * @param file
+     */
+    void onDownloadComplete(File file);
 
 }
