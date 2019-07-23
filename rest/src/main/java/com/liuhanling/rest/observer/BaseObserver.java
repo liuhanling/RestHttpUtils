@@ -1,7 +1,7 @@
 package com.liuhanling.rest.observer;
 
 import com.liuhanling.rest.exception.ApiException;
-import com.liuhanling.rest.manage.RxHttpManager;
+import com.liuhanling.rest.manage.RestTagManager;
 
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
@@ -26,7 +26,7 @@ public abstract class BaseObserver<T> implements Observer<T> {
 
     @Override
     public void onSubscribe(@NonNull Disposable d) {
-        RxHttpManager.get().add(setTag(), d);
+        RestTagManager.get().add(setTag(), d);
     }
 
     @Override

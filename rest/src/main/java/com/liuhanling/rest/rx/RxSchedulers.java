@@ -1,6 +1,6 @@
-package com.liuhanling.rest.manage;
+package com.liuhanling.rest.rx;
 
-import com.liuhanling.rest.interfaces.LoadingView;
+import com.liuhanling.rest.view.LoadingView;
 
 import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;

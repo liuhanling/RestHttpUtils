@@ -2,19 +2,15 @@ package com.liuhanling.rest.download;
 
 import android.annotation.SuppressLint;
 
-import com.liuhanling.rest.manage.RxSchedulers;
 import com.liuhanling.rest.observer.BaseObserver;
 
 import java.io.File;
 import java.io.IOException;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 

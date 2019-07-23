@@ -2,31 +2,30 @@ package com.liuhanling.rest.manage;
 
 import com.liuhanling.rest.RestHttpUtils;
 import com.liuhanling.rest.factory.ApiFactory;
-import com.liuhanling.rest.upload.UploadFileApi;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RxUrlManager {
+public class RestUrlManager {
 
-    private volatile static RxUrlManager instance;
+    private volatile static RestUrlManager instance;
 
     private Map<String, String> urlMap;
 
     public static String DEFAULT_URL_KEY = "default_url_key";
 
-    public static RxUrlManager getInstance() {
+    public static RestUrlManager getInstance() {
         if (instance == null) {
-            synchronized (RxUrlManager.class) {
+            synchronized (RestUrlManager.class) {
                 if (instance == null) {
-                    instance = new RxUrlManager();
+                    instance = new RestUrlManager();
                 }
             }
         }
         return instance;
     }
 
-    private RxUrlManager() {
+    private RestUrlManager() {
         urlMap = new HashMap<>();
     }
 
@@ -34,9 +33,9 @@ public class RxUrlManager {
      * 一次性传入urlMap
      *
      * @param urlMap map
-     * @return RxUrlManager
+     * @return RestUrlManager
      */
-    public RxUrlManager addUrl(Map<String, String> urlMap) {
+    public RestUrlManager addUrl(Map<String, String> urlMap) {
         this.urlMap = urlMap;
         return this;
     }
@@ -46,9 +45,9 @@ public class RxUrlManager {
      *
      * @param urlKey   key
      * @param urlValue value
-     * @return RxUrlManager
+     * @return RestUrlManager
      */
-    public RxUrlManager addUrl(String urlKey, String urlValue) {
+    public RestUrlManager addUrl(String urlKey, String urlValue) {
         urlMap.put(urlKey, urlValue);
         return this;
     }
@@ -57,11 +56,10 @@ public class RxUrlManager {
      * 针对单个baseUrl切换的时候清空旧baseUrl的所有信息
      *
      * @param urlValue url
-     * @return RxUrlManager
+     * @return RestUrlManager
      */
-    public RxUrlManager setUrl(String urlValue) {
+    public RestUrlManager setUrl(String urlValue) {
         urlMap.put(DEFAULT_URL_KEY, urlValue);
-        ApiFactory.getInstance().clearApi(DEFAULT_URL_KEY);
         return this;
     }
 
@@ -69,23 +67,10 @@ public class RxUrlManager {
      * 针对多个baseUrl切换的时候清空旧baseUrl的所有信息
      *
      * @param urlValue url
-     * @return RxUrlManager
+     * @return RestUrlManager
      */
-    public RxUrlManager setUrl(String urlKey, String urlValue) {
+    public RestUrlManager setUrl(String urlKey, String urlValue) {
         urlMap.put(urlKey, urlValue);
-        ApiFactory.getInstance().clearApi(urlKey);
-        return this;
-    }
-
-    /**
-     * 针对多个baseUrl切换的时候清空旧baseUrl的所有信息
-     *
-     * @param urlValue url
-     * @return RxUrlManager
-     */
-    public RxUrlManager setUrl(Class<?> apiClass, String urlValue) {
-        urlMap.put(apiClass.getSimpleName(), urlValue);
-        ApiFactory.getInstance().clearApi(apiClass.getSimpleName());
         return this;
     }
 
@@ -112,11 +97,10 @@ public class RxUrlManager {
      * 从map中删除某个url
      *
      * @param urlKey 需要删除的urlKey
-     * @return RxUrlManager
+     * @return RestUrlManager
      */
-    public RxUrlManager clear(String urlKey) {
+    public RestUrlManager clear(String urlKey) {
         urlMap.remove(urlKey);
-        ApiFactory.getInstance().clearApi(urlKey);
         return this;
     }
 
@@ -125,9 +109,9 @@ public class RxUrlManager {
      * 相当于重置url
      * 动态切换生产测试环境时候调用
      *
-     * @return RxUrlManager
+     * @return RestUrlManager
      */
-    public RxUrlManager clear() {
+    public RestUrlManager clear() {
         urlMap.clear();
         ApiFactory.getInstance().clearAllApi();
         RestHttpUtils.removeAllCookie();

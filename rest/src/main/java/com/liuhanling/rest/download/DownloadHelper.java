@@ -1,7 +1,7 @@
 package com.liuhanling.rest.download;
 
 import com.liuhanling.rest.factory.ApiFactory;
-import com.liuhanling.rest.manage.RxSchedulers;
+import com.liuhanling.rest.rx.RxSchedulers;
 
 import io.reactivex.Observable;
 import okhttp3.OkHttpClient;

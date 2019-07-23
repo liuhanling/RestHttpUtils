@@ -8,8 +8,8 @@ import com.liuhanling.rest.cookie.CookieJarImpl;
 import com.liuhanling.rest.cookie.store.CookieStore;
 import com.liuhanling.rest.download.DownloadHelper;
 import com.liuhanling.rest.factory.ApiFactory;
-import com.liuhanling.rest.manage.RxHttpManager;
-import com.liuhanling.rest.manage.RxUrlManager;
+import com.liuhanling.rest.manage.RestTagManager;
+import com.liuhanling.rest.manage.RestUrlManager;
 import com.liuhanling.rest.upload.UploadHelper;
 
 import java.util.List;
@@ -93,22 +93,22 @@ public class RestHttpUtils {
     /**
      * 切换baseUrl
      *
-     * @param baseUrlValue 域名的url
-     * @param apiClass     api
-     * @param <T>          T
+     * @param baseKey   域名的key
+     * @param apiClass  api
+     * @param <T>       T
      * @return T
      */
-    public static <T> T createApi(String baseUrl, Class<T> apiClass) {
-        return ApiFactory.getInstance().createApi(baseUrl, apiClass);
+    public static <T> T createApi(String baseKey, Class<T> apiClass) {
+        return ApiFactory.getInstance().createApi(baseKey, apiClass);
     }
 
     /**
      * 切换baseUrl
      *
-     * @param baseUrlKey   域名的key
-     * @param baseUrlValue 域名的url
-     * @param api          class
-     * @param <T>          T
+     * @param baseUrlKey    域名的key
+     * @param baseUrl       域名的url
+     * @param api           class
+     * @param <T>           T
      * @return T
      */
     public static <T> T createApi(String baseUrlKey, String baseUrl, Class<T> api) {
@@ -119,7 +119,7 @@ public class RestHttpUtils {
     /**
      * 下载文件
      *
-     * @param url 地址
+     * @param  fileUrl 地址
      * @return ResponseBody
      */
     public static Observable<ResponseBody> download(String fileUrl) {
@@ -164,32 +164,10 @@ public class RestHttpUtils {
      * 动态修改baseUrl信息
      *
      * @param urlValue url
-     * @return RxUrlManager
+     * @return RestUrlManager
      */
     public static void setBaseUrl(String urlValue) {
-        RxUrlManager.getInstance().setUrl(urlValue);
-    }
-
-    /**
-     * 动态修改baseUrl信息
-     *
-     * @param urlKey   key
-     * @param urlValue url
-     * @return RxUrlManager
-     */
-    public static RxUrlManager setBaseUrl(String urlKey, String urlValue) {
-        return RxUrlManager.getInstance().setUrl(urlKey, urlValue);
-    }
-
-    /**
-     * 动态修改baseUrl信息
-     *
-     * @param api      key
-     * @param urlValue url
-     * @return RxUrlManager
-     */
-    public static RxUrlManager setBaseUrl(Class<?> apiClass, String urlValue) {
-        return RxUrlManager.getInstance().setUrl(apiClass, urlValue);
+        RestUrlManager.getInstance().setUrl(urlValue);
     }
 
     /**
@@ -245,13 +223,13 @@ public class RestHttpUtils {
      * 取消所有请求
      */
     public static void cancelAll() {
-        RxHttpManager.get().cancelAll();
+        RestTagManager.get().cancelAll();
     }
 
     /**
      * 取消某个或某些请求
      */
     public static void cancel(Object... tag) {
-        RxHttpManager.get().cancel(tag);
+        RestTagManager.get().cancel(tag);
     }
 }

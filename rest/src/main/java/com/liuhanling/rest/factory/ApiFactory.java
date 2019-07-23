@@ -1,10 +1,9 @@
 package com.liuhanling.rest.factory;
 
-import com.liuhanling.rest.manage.RxUrlManager;
+import com.liuhanling.rest.manage.RestUrlManager;
 import com.liuhanling.rest.retrofit.RetrofitBuilder;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import retrofit2.CallAdapter;
@@ -65,23 +64,37 @@ public class ApiFactory {
 
     public ApiFactory setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
-        RxUrlManager.getInstance().setUrl(baseUrl);
+        RestUrlManager.getInstance().setUrl(baseUrl);
         return this;
     }
 
     public ApiFactory setBaseUrl(String urlKey, String urlValue) {
-        RxUrlManager.getInstance().addUrl(urlKey, urlValue);
+        RestUrlManager.getInstance().addUrl(urlKey, urlValue);
         return this;
+    }
+
+    public ApiFactory setBaseUrl(HashMap<String, String> urlMap) {
+        RestUrlManager.getInstance().addUrl(urlMap);
+        return this;
+    }
+
+    /**
+     * 默认APIService
+     */
+    public <E> E getApi(Class<E> apiClass) {
+        String baseUrlKey = RestUrlManager.DEFAULT_URL_KEY;
+        String baseUrlVal = RestUrlManager.getInstance().getUrl(baseUrlKey);
+        return createApi(baseUrlKey, baseUrlVal, apiClass);
     }
 
     public <E> E createApi(Class<E> apiClass) {
         String baseUrlKey = apiClass.getSimpleName();
-        String baseUrlVal = RxUrlManager.getInstance().getUrl(baseUrlKey);
+        String baseUrlVal = RestUrlManager.getInstance().getUrl(baseUrlKey);
         return createApi(baseUrlKey, baseUrlVal, apiClass);
     }
 
-    public <E> E createApi(String baseUrl, Class<E> apiClass) {
-        String baseKey = apiClass.getSimpleName();
+    public <E> E createApi(String baseKey, Class<E> apiClass) {
+        String baseUrl = RestUrlManager.getInstance().getUrl(baseKey);
         return createApi(baseKey, baseUrl, apiClass);
     }
 

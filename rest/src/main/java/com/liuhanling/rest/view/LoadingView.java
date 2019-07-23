@@ -1,4 +1,4 @@
-package com.liuhanling.rest.interfaces;
+package com.liuhanling.rest.view;
 
 public interface LoadingView {
     void showLoadingView();
