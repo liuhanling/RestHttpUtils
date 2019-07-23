@@ -13,7 +13,11 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public abstract class BaseUrlInterceptor implements Interceptor {
+public class BaseUrlInterceptor implements Interceptor {
+
+    public static BaseUrlInterceptor create() {
+        return new BaseUrlInterceptor();
+    }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
@@ -21,9 +25,9 @@ public abstract class BaseUrlInterceptor implements Interceptor {
         HttpUrl httpUrl = request.url();
         Request.Builder builder = request.newBuilder();
 
-        List<String> urlHeaders = request.headers(getUrlKey());
+        List<String> urlHeaders = request.headers(RestConstants.URL_KEY_NAME);
         if (urlHeaders != null && urlHeaders.size() > 0) {
-            builder.removeHeader(getUrlKey());
+            builder.removeHeader(RestConstants.URL_KEY_NAME);
 
             String baseKey = urlHeaders.get(0);
             String baseUrl = RestUrlManager.getInstance().getUrl(baseKey);
@@ -43,9 +47,5 @@ public abstract class BaseUrlInterceptor implements Interceptor {
         }
 
         return chain.proceed(request);
-    }
-
-    public String getUrlKey() {
-        return RestConstants.URL_KEY_NAME;
     }
 }
