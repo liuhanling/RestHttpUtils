@@ -1,32 +1,31 @@
 [![](https://jitpack.io/v/liuhanling/RestHttpUtils.svg)](https://jitpack.io/#liuhanling/RestHttpUtils)
 
 # RestHttpUtils
-## 基于RxJava2和Retrofit2封装，REST风格，支持动态切换baseUrl
+### 基于RxJava2和Retrofit2封装，REST风格，支持动态切换baseUrl
 
-### 添加Gradle依赖
+## 添加Gradle依赖
 
 1.项目 build.gradle 的 repositories 添加:
 ```
-     allprojects {
-         repositories {
-            ...
-            maven { url "https://jitpack.io" }
-        }
+allprojects {
+    repositories {
+        ...
+        maven { url "https://jitpack.io" }
     }
+}
 ```
- 2.模块 build.gradle 的 dependencies 添加:
- 
+2.模块 build.gradle 的 dependencies 添加:
  ```
-        dependencies {
-            ...
-            compile 'com.github.liuhanling:RestHttpUtils:1.1.0'
-        }
+dependencies {
+    ...
+    implementation 'com.github.liuhanling:RestHttpUtils:1.1.0'
+}
 ```
 
-# 使用说明
-### 1、RestHttpUtils初始化配置
+## 使用说明
+## 1、RestHttpUtils初始化配置
 
-> ##### 在项目的Application的onCreate方法中进行初始化配置
+在项目的Application的onCreate方法中进行初始化配置
 ```
 public class App extends Application {
 
@@ -39,8 +38,8 @@ public class App extends Application {
         .setHeaders(headerMap)
         //开启缓存策略(默认false)
         .setCache(true)
-        .setHasNetCacheTime(10)//默认有网络时候缓存60秒
-        .setNoNetCacheTime(3600)//默认有网络时候缓存3600秒
+        .setHasNetCacheTime(10)//默认缓存60秒
+        .setNoNetCacheTime(3600)//默认缓存3600秒
         //不设置的话，默认不对cookie做处理
         //可以添加自己的拦截器(比如使用自己熟悉三方的缓存库等等)
         //.setAddInterceptor(UrlInterceptor.create())
@@ -50,7 +49,7 @@ public class App extends Application {
         //2、使用预埋证书, 校验服务端证书（自签名证书）
         //.setSslSocketFactory(cerInputStream)
         //3、使用bks证书和密码管理客户端证书（双向认证），使用预埋证书，校验服务端证书（自签名证书）
-        //.setSslSocketFactory(bksInputStream,"123456",cerInputStream)
+        //.setSslSocketFactory(bksInputStream,"123456", cerInputStream)
         //全局超时配置
         .setReadTimeout(15)
         //全局超时配置
@@ -65,20 +64,19 @@ public class App extends Application {
                 .getInstance()
                 .init(this)
                 .config()
-                //配置adapter
+                //配置自定义factory
                 //.setCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                //配置converter
+                //配置自定义converter
                 //.setConverterFactory(ScalarsConverterFactory.create(), GsonConverterFactory.create())
                 //配置全局baseUrl
                 .setBaseUrl("https://github.com/")
                 //开启全局配置
-                .setOkClient(okHttpClient);
-      
+                .setOkClient(client);
     }
 }
 ```
 
-# 2、baseUrl配置及动态修改
+## 2、baseUrl配置及动态修改
 
 ### 2.1、全局单个baseUrl动态切换
 ```
@@ -92,15 +90,13 @@ RestUrlManager.getInstance().setUrl("newUrl");
 ### 2.2、多baseUrl对应单个ApiService
 ```
 public interface ApiUrl {
-
     String DOUBAN_KEY = "douban";
     String GITHUB_KET = "github";
-    String DOUBAN_URL = UrlInterceptor.BASE_URL_KEY + ":" + DOUBAN_KEY;
-    String GITHUB_URL = UrlInterceptor.BASE_URL_KEY + ":" + GITHUB_KET;
+    String DOUBAN_URL = URLConstants.BASE_URL_KEY + ":" + DOUBAN_KEY;
+    String GITHUB_URL = URLConstants.BASE_URL_KEY + ":" + GITHUB_KET;
 }
 
 public interface ApiService {
-
     @Headers({DOUBAN_URL})
     @GET("api/task/list")
     Observable<BaseData<List<Task>>> getTask();
@@ -144,7 +140,7 @@ RestHttpUtils.createApi(ApiUrl.GITHUB_KET, GitHubApi.class)
 ```          
 ### 2.4、温馨提示
 
-> #### 存在多个API时，可创建一个类来管理，以简化操作
+存在多个API时，可创建一个类来管理，以简化操作
 
 ```
 public class RestUtils {
@@ -165,15 +161,11 @@ public class RestUtils {
 }
 ```
 
-### 3、默认已实现三种数据格式
+## 3、默认已实现三种数据格式
 
 * 1、BaseObserver     (基础Observer, 接收类型实体类T)
 * 2、StringObserver   (接收String数据)
 * 3、DataObserver     (传入BaseData<T>类型; 返回data对应类型T)
-
-# 代码实例
-
-> ## 使用Application里边的全局配置的参数
 
 ### 3.1、使用BaseObserver请求示例
 ```
@@ -260,7 +252,7 @@ RestHttpUtils
              }
           });
 ```
-### 4、文件下载
+## 4、文件下载
 ```
 RestHttpUtils
         .download(fileUrl)
@@ -286,7 +278,7 @@ RestHttpUtils
             }
         });
 ```
-### 5、上传图片
+## 5、上传图片
 上传单张图片的接口
 ```
 RestHttpUtils
@@ -343,7 +335,7 @@ RestHttpUtils.getApi()
         });
 ```
 
-### 6、取消请求相关配置
+## 6、取消请求相关配置
 ```
 //Observer重写setTag
 new XXXObserver<T>() {
