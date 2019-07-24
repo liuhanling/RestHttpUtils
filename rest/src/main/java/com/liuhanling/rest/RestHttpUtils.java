@@ -32,19 +32,17 @@ public class RestHttpUtils {
 
     @SuppressLint("StaticFieldLeak")
     private static Context context;
-    @SuppressLint("StaticFieldLeak")
-    private static RestHttpUtils instance;
+
+    private static class RestHolder {
+        @SuppressLint("StaticFieldLeak")
+        private static RestHttpUtils INSTANCE = new RestHttpUtils();
+    }
 
     public static RestHttpUtils getInstance() {
-        if (instance == null) {
-            synchronized (RestHttpUtils.class) {
-                if (instance == null) {
-                    instance = new RestHttpUtils();
-                }
-            }
-        }
-        return instance;
+        return RestHolder.INSTANCE;
     }
+
+    private RestHttpUtils() {}
 
     /**
      * Application中调用

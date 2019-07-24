@@ -1,6 +1,7 @@
 package com.liuhanling.rest.manage;
 
 import com.liuhanling.rest.RestHttpUtils;
+import com.liuhanling.rest.consts.URLConstants;
 import com.liuhanling.rest.factory.ApiFactory;
 
 import java.util.HashMap;
@@ -8,21 +9,14 @@ import java.util.Map;
 
 public class RestUrlManager {
 
-    private volatile static RestUrlManager instance;
-
     private Map<String, String> urlMap;
 
-    public static String DEFAULT_URL_KEY = "default_url_key";
+    private static class UrlHolder {
+        private static RestUrlManager INSTANCE = new RestUrlManager();
+    }
 
     public static RestUrlManager getInstance() {
-        if (instance == null) {
-            synchronized (RestUrlManager.class) {
-                if (instance == null) {
-                    instance = new RestUrlManager();
-                }
-            }
-        }
-        return instance;
+        return UrlHolder.INSTANCE;
     }
 
     private RestUrlManager() {
@@ -59,7 +53,7 @@ public class RestUrlManager {
      * @return RestUrlManager
      */
     public RestUrlManager setUrl(String urlValue) {
-        urlMap.put(DEFAULT_URL_KEY, urlValue);
+        urlMap.put(URLConstants.BASE_URL_KEY, urlValue);
         return this;
     }
 
@@ -80,7 +74,7 @@ public class RestUrlManager {
      * @return url
      */
     public String getUrl() {
-        return getUrl(DEFAULT_URL_KEY);
+        return getUrl(URLConstants.BASE_URL_KEY);
     }
 
     /**

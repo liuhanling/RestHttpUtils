@@ -1,5 +1,6 @@
 package com.liuhanling.rest.factory;
 
+import com.liuhanling.rest.consts.URLConstants;
 import com.liuhanling.rest.manage.RestUrlManager;
 import com.liuhanling.rest.retrofit.RetrofitBuilder;
 
@@ -79,7 +80,7 @@ public class ApiFactory {
     }
 
     public <E> E createApi(Class<E> apiClass) {
-        String baseKey = RestUrlManager.DEFAULT_URL_KEY;
+        String baseKey = URLConstants.BASE_URL_KEY;
         String baseUrl = RestUrlManager.getInstance().getUrl();
         return createApi(baseKey, baseUrl, apiClass);
     }
