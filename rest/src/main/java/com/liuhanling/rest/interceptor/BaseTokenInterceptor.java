@@ -26,22 +26,26 @@ public abstract class BaseTokenInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
 
-        // 判断tokenApi
-        String path = request.url().encodedPath();
-        if (path.contains(getTokenApi())) {
+        String tokenKey = getTokenKey();
+        String tokenApi = getTokenApi();
+        if (TextUtils.isEmpty(tokenKey) || TextUtils.isEmpty(tokenApi)) {
             return chain.proceed(request);
         }
 
-        // 添加token
-        String tokenKey = getTokenKey();
-        String tokenVal = TokenStore.getToken();
-        if (!TextUtils.isEmpty(tokenKey) && !TextUtils.isEmpty(tokenVal)) {
-            request = request.newBuilder()
-                    .header(tokenKey, tokenVal)
-                    .build();
+        // 判断是否需要token
+        String path = request.url().encodedPath();
+        if (path.contains(tokenApi)) {
+            return chain.proceed(request);
         }
 
-        // 判断token失效
+        // 添加token到Header
+        String tokenVal = TokenStore.getInstance().getToken();
+        request = request.newBuilder()
+                .removeHeader(tokenKey)
+                .header(tokenKey, tokenVal)
+                .build();
+
+        // 判断token是否失效
         Response response = chain.proceed(request);
         ResponseBody responseBody = response.body();
         if (HttpHeaders.hasBody(response) && !hasUnknownEncoding(response.headers())) {
@@ -59,7 +63,7 @@ public abstract class BaseTokenInterceptor implements Interceptor {
 
                 if (isTokenInvalid(json)) {
                     refreshToken();
-                    tokenVal = TokenStore.getToken();
+                    tokenVal = TokenStore.getInstance().getToken();
                     if (!TextUtils.isEmpty(tokenVal)) {
                         Request newRequest = request.newBuilder()
                                 .removeHeader(tokenKey)
@@ -101,11 +105,11 @@ public abstract class BaseTokenInterceptor implements Interceptor {
         }
     }
 
-    protected abstract boolean isTokenInvalid(String response);
+    public abstract String getTokenKey();
 
-    protected abstract String getTokenApi();
+    public abstract String getTokenApi();
 
-    protected abstract String getTokenKey();
+    public abstract boolean isTokenInvalid(String response);
 
-    protected abstract void refreshToken();
+    public abstract void refreshToken();
 }

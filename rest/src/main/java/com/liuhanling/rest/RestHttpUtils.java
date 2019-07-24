@@ -10,6 +10,7 @@ import com.liuhanling.rest.download.DownloadHelper;
 import com.liuhanling.rest.factory.ApiFactory;
 import com.liuhanling.rest.manage.RestTagManager;
 import com.liuhanling.rest.manage.RestUrlManager;
+import com.liuhanling.rest.token.TokenStore;
 import com.liuhanling.rest.upload.UploadHelper;
 
 import java.util.List;
@@ -78,7 +79,6 @@ public class RestHttpUtils {
         return ApiFactory.getInstance();
     }
 
-
     /**
      * 使用全局参数创建请求
      *
@@ -93,9 +93,9 @@ public class RestHttpUtils {
     /**
      * 切换baseUrl
      *
-     * @param baseKey   域名的key
-     * @param apiClass  api
-     * @param <T>       T
+     * @param baseKey  域名的key
+     * @param apiClass api
+     * @param <T>      T
      * @return T
      */
     public static <T> T createApi(String baseKey, Class<T> apiClass) {
@@ -105,10 +105,10 @@ public class RestHttpUtils {
     /**
      * 切换baseUrl
      *
-     * @param baseUrlKey    域名的key
-     * @param baseUrl       域名的url
-     * @param api           class
-     * @param <T>           T
+     * @param baseUrlKey 域名的key
+     * @param baseUrl    域名的url
+     * @param api        class
+     * @param <T>        T
      * @return T
      */
     public static <T> T createApi(String baseUrlKey, String baseUrl, Class<T> api) {
@@ -119,7 +119,7 @@ public class RestHttpUtils {
     /**
      * 下载文件
      *
-     * @param  fileUrl 地址
+     * @param fileUrl 地址
      * @return ResponseBody
      */
     public static Observable<ResponseBody> download(String fileUrl) {
@@ -129,8 +129,8 @@ public class RestHttpUtils {
     /**
      * 上传单张图片
      *
-     * @param url 地址
-     * @param filePath  文件路径
+     * @param url      地址
+     * @param filePath 文件路径
      * @return ResponseBody
      */
     public static Observable<ResponseBody> uploadFile(String url, String filePath) {
@@ -140,7 +140,7 @@ public class RestHttpUtils {
     /**
      * 上传多张图片
      *
-     * @param url 地址
+     * @param url       地址
      * @param filePaths 文件路径
      * @return ResponseBody
      */
@@ -151,7 +151,7 @@ public class RestHttpUtils {
     /**
      * 上传多张图片
      *
-     * @param url 地址
+     * @param url       地址
      * @param paramsMap 参数
      * @param filePaths 文件路径
      * @return ResponseBody
@@ -161,13 +161,59 @@ public class RestHttpUtils {
     }
 
     /**
-     * 动态修改baseUrl信息
+     * 动态修改baseUrl信息（单个）
+     *
+     * @param url url
+     */
+    public static void setBaseUrl(String url) {
+        RestUrlManager.getInstance().setUrl(url);
+    }
+
+    /**
+     * 动态修改baseUrl信息（多个）
      *
      * @param urlValue url
-     * @return RestUrlManager
      */
-    public static void setBaseUrl(String urlValue) {
-        RestUrlManager.getInstance().setUrl(urlValue);
+    public static void setBaseUrl(String urlKey, String urlValue) {
+        RestUrlManager.getInstance().setUrl(urlKey, urlValue);
+    }
+
+    /**
+     * 获取默认token
+     *
+     * @return token
+     */
+    public static String getToken() {
+        return TokenStore.getInstance().getToken();
+    }
+
+    /**
+     * 根据key获取Token
+     *
+     * @param key key
+     * @return token
+     */
+    public static String getToken(String key) {
+        return TokenStore.getInstance().getToken(key);
+    }
+
+    /**
+     * 设置默认token
+     *
+     * @param token token
+     */
+    public static void setToken(String token) {
+        TokenStore.getInstance().setToken(token);
+    }
+
+    /**
+     * 设置键值key-token
+     *
+     * @param key   key
+     * @param token token
+     */
+    public static void setToken(String key, String token) {
+        TokenStore.getInstance().setToken(key, token);
     }
 
     /**

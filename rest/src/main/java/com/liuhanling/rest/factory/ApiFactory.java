@@ -78,19 +78,10 @@ public class ApiFactory {
         return this;
     }
 
-    /**
-     * 默认APIService
-     */
-    public <E> E getApi(Class<E> apiClass) {
-        String baseUrlKey = RestUrlManager.DEFAULT_URL_KEY;
-        String baseUrlVal = RestUrlManager.getInstance().getUrl(baseUrlKey);
-        return createApi(baseUrlKey, baseUrlVal, apiClass);
-    }
-
     public <E> E createApi(Class<E> apiClass) {
-        String baseUrlKey = apiClass.getSimpleName();
-        String baseUrlVal = RestUrlManager.getInstance().getUrl(baseUrlKey);
-        return createApi(baseUrlKey, baseUrlVal, apiClass);
+        String baseKey = RestUrlManager.DEFAULT_URL_KEY;
+        String baseUrl = RestUrlManager.getInstance().getUrl();
+        return createApi(baseKey, baseUrl, apiClass);
     }
 
     public <E> E createApi(String baseKey, Class<E> apiClass) {

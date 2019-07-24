@@ -53,7 +53,7 @@ public class RestUrlManager {
     }
 
     /**
-     * 针对单个baseUrl切换的时候清空旧baseUrl的所有信息
+     * 动态修改baseUrl信息（单个）
      *
      * @param urlValue url
      * @return RestUrlManager
@@ -64,7 +64,7 @@ public class RestUrlManager {
     }
 
     /**
-     * 针对多个baseUrl切换的时候清空旧baseUrl的所有信息
+     * 动态修改baseUrl信息（多个）
      *
      * @param urlValue url
      * @return RestUrlManager
@@ -101,13 +101,12 @@ public class RestUrlManager {
      */
     public RestUrlManager clear(String urlKey) {
         urlMap.remove(urlKey);
+        RestHttpUtils.removeCookieByUrl(urlKey);
         return this;
     }
 
     /**
      * 清空设置的url相关的所以信息
-     * 相当于重置url
-     * 动态切换生产测试环境时候调用
      *
      * @return RestUrlManager
      */
