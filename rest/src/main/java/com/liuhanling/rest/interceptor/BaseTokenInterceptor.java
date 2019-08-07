@@ -38,8 +38,12 @@ public abstract class BaseTokenInterceptor implements Interceptor {
             return chain.proceed(request);
         }
 
-        // 添加token到Header
         String tokenVal = TokenStore.getInstance().getToken();
+        if (TextUtils.isEmpty(tokenVal)) {
+            return chain.proceed(request);
+        }
+
+        // 添加token到Header
         request = request.newBuilder()
                 .removeHeader(tokenKey)
                 .header(tokenKey, tokenVal)
